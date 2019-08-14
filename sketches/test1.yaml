@@ -1,0 +1,34 @@
+event1:
+  desc: First screen
+  show: blue.png
+  time: 1.0
+  depends: None
+  #exec: "from yarpless import *\nicub=iCub(\"icubSim\")"
+  text: White rabbit jumping all over the tea party table
+  delay: 0
+delay1:
+  desc: Showing nothing, icub rolling eyes
+  time: 1.0
+  depends: event1
+  #exec: icub.gaze.lookAt3DPoint(-1.0, -0.5, 1.0, waitMotionDone=True)
+  delay: 0
+event2:
+  desc: Simple red screen
+  time: 3.0
+  #show: red.png
+  pdf: beam1.pdf
+  depends: delay1
+  #exec: icub.gaze.lookAt3DPoint(-1.0, -0.2, 0.5, waitMotionDone=True)
+  delay: 0.0
+event3:
+  time: 1.0
+  show: blue.png
+  depends: event2
+event4:
+  time: 1.0
+  show: yellow.png
+  depends: event3
+event5:
+  time: 1.0
+  show: red.png
+  depends: event4

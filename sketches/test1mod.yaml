@@ -1,0 +1,50 @@
+info:
+  _start: place1
+  date: 20190715-1000
+  desc: First experiment to be conducted
+  robot: icubSim
+places:
+  place1:
+    arc:
+    - transition1
+    - transition2
+    exec: 'from yarpless import *
+
+      icub=iCub("icubSim")
+
+      '
+    show: blue.png
+    text: White rabbit
+  place2:
+    arc:
+    - transition3
+    exec: icub.gaze.lookAt3DPoint(-1.0, -0.5, 1.0, waitMotionDone=True)
+    show: red.png
+  place3:
+    name: RobotControl
+    show: yellow.png
+  place4:
+    arc:
+    - transition5
+    exec: icub.gaze.lookAt3DPoint(-1.0, -0.2, 0.5, waitMotionDone=True)
+    name: DisplaySomething
+    show: purple.png
+transitions:
+  transition1:
+    arc:
+    - place2
+    keyboard: s
+    maxtime: 1
+  transition2:
+    arc:
+    - place3
+    if: null
+    maxtime: 1.5
+  transition3:
+    arc:
+    - place4
+    maxtime: 1.5
+  transition5:
+    arc:
+    - place1
+    maxtime: 2
