@@ -11,7 +11,7 @@ app = QApplication([])
 
 
 player = QMediaPlayer()
-player.setMedia(QMediaContent(QUrl.fromLocalFile("/home/anil/test1.mp4")))
+player.setMedia(QMediaContent(QUrl.fromLocalFile(QFileInfo("test1.mp4").absoluteFilePath())))
 video = QVideoWidget()
 player.setVideoOutput(video)
 video.show()
