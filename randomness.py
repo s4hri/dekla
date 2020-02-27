@@ -49,10 +49,16 @@ class CuteAnim(QGraphicsView):
                 self.label1Item = QGraphicsSimpleTextItem("+1")
                 self.label1Item.setFont(QFont( "Arial", 40, QFont.Bold))
                 self.scene1.addItem(self.label1Item)
-                #self.label1Item.adjustSize()
-                self.label1Item.setPos( -self.label1Item.boundingRect().x()/2,-self.label1Item.boundingRect().y()/2, )
+                self.label1Item.setPos( -self.label1Item.boundingRect().width()/2,-self.label1Item.boundingRect().height()/2 )
                 self.label1Item.hide()
-                self.label1rotation = 0
+
+                self.label2Item = QGraphicsSimpleTextItem("+1")
+                self.label2Item.setFont(QFont( "Arial", 40, QFont.Bold))
+                self.scene1.addItem(self.label2Item)
+                self.label2Item.setPos( self.label2Item.boundingRect().width()/2,self.label2Item.boundingRect().height()/2 )
+                self.label2Item.hide()
+                self.label2Item.setRotation(180)
+
 
                 #self.label1 = QLabel("+1")
                 #self.label1.setAlignment(Qt.AlignCenter)
@@ -71,13 +77,16 @@ class CuteAnim(QGraphicsView):
 
         def showReward(self,inverted):
                 if inverted:
-                        self.label1Item.setRotation(180)
+                        #self.label1Item.setRotation(180)
+                        self.label2Item.show()
                 else:
-                        self.label1Item.setRotation(0)
-                self.label1Item.show()
+                        self.label1Item.show()
+                        #self.label1Item.setRotation(0)
+                #self.label1Item.show()
         def finishedAnim(self):
                 # hide everything:
                 self.label1Item.hide()
+                self.label2Item.hide()
 
 
 class RandMain(CuteMain):
