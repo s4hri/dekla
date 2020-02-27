@@ -30,75 +30,11 @@ import io # for StringIO, dummy file
 app = QApplication([])
 
 class defaults:
-        appName = "Dekla v0.2 - Posner Experiment"
+        appName = "Dekla v0.2"
         screen1 = "Main"
         screen2 = "Left"
         screen3 = "Right"
         savefile = "../data/results_" # and %Y%m%d-%H%M%S
-
-"""
-conditions = [
-  'close',
-  'close',
-  'mutual',
-  'mutual',
-  'mutual',
-  'close',
-  'close',
-  'close',
-  'mutual',
-  'close',
-  'mutual',
-  'mutual',
-  'mutual',
-  'mutual',
-  'close',
-  'close']
-
-
-subtrials = [ (lookingside,letterside,letter)
-              for lookingside in ['left','right']
-              for letterside  in ['left','right']
-              for letter in [ 'T','V'] ]
-
-trials = list()
-
-for trial in conditions:
-        subtrialsTwice = subtrials.copy()
-        subtrialsTwice.extend(subtrials)
-        random.shuffle(subtrialsTwice)
-        for subtrial in subtrialsTwice:
-                place1 = trial + ' ' + subtrial[0]
-                place2 = subtrial[1] + ' ' + subtrial[2]
-                place3 = 'return ' + subtrial[0]
-                place4 = subtrial[1] + ' empty'
-                key = subtrial[2]
-                
-                trials.append(  dict( place1=place1,
-                                      place2=place2,
-                                      place3=place3,
-                                      place4=place4,
-                                      key=key ) )
-"""
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-#
-#    //
-#
-
-
 
 class CuteLog:
         def __init__(self):
@@ -116,64 +52,32 @@ class CuteLog:
                 if self.sock1 != None:
                         self.sock1.sendall(text.encode('utf-8'))
                 
-        
 #cuteLog = CuteLog()
 
-
-
-
-
-
-#def movielist():
-        #'''
-        #placeholder for interactive loading of movies later on
-        #'''
-        #movies = dict()
-        ## TODO check files existance before proceeding
-        #movies['close left'] = 'movies/close left final0001-0105.mp4'
-        #movies['mutual left'] = 'movies/mutual left final0001-0105.mp4'
-        #movies['return left'] = 'movies/return left final0001-0065.mp4'
-
-        #movies['close right'] = 'movies/close right final0001-0105.mp4'
-        #movies['mutual right'] = 'movies/mutual right final0001-0105.mp4'
-        #movies['return right'] = 'movies/return right final0066-0130.mp4'
-        #return movies
 
 class CuteVideo(QVideoWidget):
         def __init__(self, moviename):
                 super().__init__()
                 self.setMinimumSize(640,480)
-                
                 self.player = QMediaPlayer()
                 self.player.setMedia(QMediaContent(QUrl.fromLocalFile(QFileInfo(moviename).absoluteFilePath())))
-                #self.player.setPlaylist(moviename);
                 self.player.setVideoOutput(self)
-                #self.player.play()
                 self.player.setNotifyInterval(2) # ms
                 self.player.positionChanged.connect(self.periodicPause)
-                #self.player.mediaStatusChanged.connect(self.statusCheck)
-                
         stackedIndex = 0
-        
-        #def statusCheck(self,status):
-                #if status == QMediaPlayer.EndOfMedia:
-                        #print("Media ended")
-                        #self.player.setPosition(self.player.duration()-10)
         
         def periodicPause(self,position):
                 # will spit out errors:
                 #  RecursionError: maximum recursion depth exceeded in comparison
                 # if you use anything modifying playing position without checking State
                 # do any modifications inside if statements only when paused!
-                #print(position)
                 if self.player.state() == QMediaPlayer.PlayingState:
-                        #print(self.player.duration()-position)
                         if self.player.duration()>0:
                                 if self.player.duration()-position<10:
                                         # first pause! always first pause!
                                         self.player.pause()
                                         if self.player.isSeekable():
-                                                # correct it to be precisely 50ms before the end
+                                                # correct it to be precisely 10ms before the end
                                                 self.player.setPosition(self.player.duration()-10)
 
 # do not add too much here, this is essentially a keypress forward class!

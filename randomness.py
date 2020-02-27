@@ -39,6 +39,27 @@ class CuteAnim(QGraphicsView):
                 self.scene1.addItem(self.item1.circle3)
                 self.scene1.addItem(self.item1.circle4)
                 self.scene1.addItem(self.item1.circle5)
+                
+
+                self.aruco1 = QGraphicsPixmapItem( QPixmap.fromImage(QImage("media/M00.png")))
+                self.scene1.addItem(self.aruco1)
+                self.aruco1.setPos( -300,-300 )
+                self.aruco1.setScale(0.2)
+                self.aruco2 = QGraphicsPixmapItem( QPixmap.fromImage(QImage("media/M01.png")))
+                self.scene1.addItem(self.aruco2)
+                self.aruco2.setPos( 300,-300 )
+                self.aruco2.setScale(0.2)
+                self.aruco3 = QGraphicsPixmapItem( QPixmap.fromImage(QImage("media/M02.png")))
+                self.scene1.addItem(self.aruco3)
+                self.aruco3.setPos( 300,300 )
+                self.aruco3.setScale(0.2)
+                self.aruco4 = QGraphicsPixmapItem( QPixmap.fromImage(QImage("media/M03.png")))
+                self.scene1.addItem(self.aruco4)
+                self.aruco4.setPos( -300,300 )
+                self.aruco4.setScale(0.2)
+                
+                
+                
                 self.currentAngle = 0
                 # anim has to exist for Pause checking:
                 self.anim = QPropertyAnimation(self.item1, b"pos")
@@ -64,8 +85,6 @@ class CuteAnim(QGraphicsView):
                 #self.label1.setAlignment(Qt.AlignCenter)
                 #self.label1item = self.scene1.addWidget(self.label1)
                 
-                
-                
                         
                 self.setScene(self.scene1)
         def rotateObjects(self,angle):
@@ -88,6 +107,8 @@ class CuteAnim(QGraphicsView):
                 self.label1Item.hide()
                 self.label2Item.hide()
 
+        def keyPressEvent(self,event):
+                self.parent().keyPressEvent(event)
 
 class RandMain(CuteMain):
         def __init__(self):
