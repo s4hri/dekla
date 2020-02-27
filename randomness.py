@@ -30,10 +30,16 @@ class Cir(QObject):
 class CuteAnim(QGraphicsView):
         def __init__(self):
                 super().__init__()
-                self.setMinimumSize(640,480)
                 self.item1 = Cir()
                 
                 self.scene1 = QGraphicsScene()
+                self.scene1.setSceneRect( -1920/2, -1080/2, 1920, 1080 )
+                self.setSceneRect( self.scene1.sceneRect() )
+                #self.fitInView( self.scene1.sceneRect(), Qt.KeepAspectRatio )
+                self.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff);
+                self.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOff);
+                
+                
                 self.scene1.addItem(self.item1.circle1)
                 self.scene1.addItem(self.item1.circle2)
                 self.scene1.addItem(self.item1.circle3)
@@ -43,20 +49,20 @@ class CuteAnim(QGraphicsView):
 
                 self.aruco1 = QGraphicsPixmapItem( QPixmap.fromImage(QImage("media/M00.png")))
                 self.scene1.addItem(self.aruco1)
-                self.aruco1.setPos( -300,-300 )
-                self.aruco1.setScale(0.2)
+                self.aruco1.setPos( -800,-500 )
+                self.aruco1.setScale(0.4)
                 self.aruco2 = QGraphicsPixmapItem( QPixmap.fromImage(QImage("media/M01.png")))
                 self.scene1.addItem(self.aruco2)
-                self.aruco2.setPos( 300,-300 )
-                self.aruco2.setScale(0.2)
+                self.aruco2.setPos( 600,-500 )
+                self.aruco2.setScale(0.4)
                 self.aruco3 = QGraphicsPixmapItem( QPixmap.fromImage(QImage("media/M02.png")))
                 self.scene1.addItem(self.aruco3)
-                self.aruco3.setPos( 300,300 )
-                self.aruco3.setScale(0.2)
+                self.aruco3.setPos( 600,300 )
+                self.aruco3.setScale(0.4)
                 self.aruco4 = QGraphicsPixmapItem( QPixmap.fromImage(QImage("media/M03.png")))
                 self.scene1.addItem(self.aruco4)
-                self.aruco4.setPos( -300,300 )
-                self.aruco4.setScale(0.2)
+                self.aruco4.setPos( -800,300 )
+                self.aruco4.setScale(0.4)
                 
                 
                 
@@ -116,6 +122,8 @@ class RandMain(CuteMain):
                 super().__init__(db)
                 self.cuteAnim = CuteAnim()
                 self.layoutStack['main'].addWidget(self.cuteAnim)
+                self.setMinimumSize(1920,1080)
+                
                 pass
         def keyPressEvent(self,event):
                 super().keyPressEvent(event)
