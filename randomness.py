@@ -10,17 +10,22 @@ from dekla import *
 class Cir(QObject):
         def __init__(self):
                 super().__init__()
-                self.circle1 = QGraphicsEllipseItem(100-25,-25,50,50)
-                self.circle2 = QGraphicsEllipseItem(100-25,-25,50,50)
-                self.circle3 = QGraphicsEllipseItem(100-25,-25,50,50)
-                self.circle4 = QGraphicsEllipseItem(-50,-50,100,100)
-                self.circle5 = QGraphicsEllipseItem(-150,-150,300,300)
+                cw = 200
+                self.circle1 = QGraphicsEllipseItem(380-cw/2,-cw/2,cw,cw)
+                self.circle2 = QGraphicsEllipseItem(380-cw/2,-cw/2,cw,cw)
+                self.circle3 = QGraphicsEllipseItem(380-cw/2,-cw/2,cw,cw)
+                self.circle4 = QGraphicsEllipseItem(-300/2,-300/2,300,300)
+                self.circle5 = QGraphicsEllipseItem(-1000/2,-1000/2,1000,1000)
                 
                 self.circle1.setBrush(Qt.red)
                 self.circle2.setBrush(Qt.green)
                 self.circle3.setBrush(Qt.blue)
+                self.circle5.setBrush(Qt.white)
+                
                 self.circle2.setRotation(120)
                 self.circle3.setRotation(240)
+                
+                
         def _set_pos(self, pos):
                 self.circle1.setRotation(pos.x())
                 self.circle2.setRotation(pos.x()+120)
@@ -33,33 +38,35 @@ class CuteAnim(QGraphicsView):
                 self.item1 = Cir()
                 
                 self.scene1 = QGraphicsScene()
+                self.scene1.setBackgroundBrush(Qt.black)
                 self.scene1.setSceneRect( -1920/2, -1080/2, 1920, 1080 )
                 self.setSceneRect( self.scene1.sceneRect() )
                 #self.fitInView( self.scene1.sceneRect(), Qt.KeepAspectRatio )
                 self.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff);
                 self.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOff);
                 
-                
+                self.scene1.addItem(self.item1.circle5)
+                #self.scene1.addItem(self.item1.circle4)
                 self.scene1.addItem(self.item1.circle1)
                 self.scene1.addItem(self.item1.circle2)
                 self.scene1.addItem(self.item1.circle3)
-                self.scene1.addItem(self.item1.circle4)
-                self.scene1.addItem(self.item1.circle5)
+                
+                
                 
 
-                self.aruco1 = QGraphicsPixmapItem( QPixmap.fromImage(QImage("media/M00.png")))
+                self.aruco1 = QGraphicsPixmapItem( QPixmap.fromImage(QImage("media/M00_border.png")))
                 self.scene1.addItem(self.aruco1)
                 self.aruco1.setPos( -800,-500 )
                 self.aruco1.setScale(0.4)
-                self.aruco2 = QGraphicsPixmapItem( QPixmap.fromImage(QImage("media/M01.png")))
+                self.aruco2 = QGraphicsPixmapItem( QPixmap.fromImage(QImage("media/M01_border.png")))
                 self.scene1.addItem(self.aruco2)
                 self.aruco2.setPos( 600,-500 )
                 self.aruco2.setScale(0.4)
-                self.aruco3 = QGraphicsPixmapItem( QPixmap.fromImage(QImage("media/M02.png")))
+                self.aruco3 = QGraphicsPixmapItem( QPixmap.fromImage(QImage("media/M02_border.png")))
                 self.scene1.addItem(self.aruco3)
                 self.aruco3.setPos( 600,300 )
                 self.aruco3.setScale(0.4)
-                self.aruco4 = QGraphicsPixmapItem( QPixmap.fromImage(QImage("media/M03.png")))
+                self.aruco4 = QGraphicsPixmapItem( QPixmap.fromImage(QImage("media/M03_border.png")))
                 self.scene1.addItem(self.aruco4)
                 self.aruco4.setPos( -800,300 )
                 self.aruco4.setScale(0.4)
@@ -74,13 +81,13 @@ class CuteAnim(QGraphicsView):
                 self.anim.finished.connect(self.finishedAnim)
                 
                 self.label1Item = QGraphicsSimpleTextItem("+1")
-                self.label1Item.setFont(QFont( "Arial", 40, QFont.Bold))
+                self.label1Item.setFont(QFont( "Arial", 100, QFont.Bold))
                 self.scene1.addItem(self.label1Item)
                 self.label1Item.setPos( -self.label1Item.boundingRect().width()/2,-self.label1Item.boundingRect().height()/2 )
                 self.label1Item.hide()
 
                 self.label2Item = QGraphicsSimpleTextItem("+1")
-                self.label2Item.setFont(QFont( "Arial", 40, QFont.Bold))
+                self.label2Item.setFont(QFont( "Arial", 100, QFont.Bold))
                 self.scene1.addItem(self.label2Item)
                 self.label2Item.setPos( self.label2Item.boundingRect().width()/2,self.label2Item.boundingRect().height()/2 )
                 self.label2Item.hide()
