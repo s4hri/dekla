@@ -31,6 +31,9 @@ import re
 import json
 
 
+from .deklaWeb import *
+
+
 # # this is moved inside CuteManager.runExperiment()
 #with open('posner02.yaml','r') as file:
         #db = yaml.load(file,Loader=yaml.Loader)
@@ -216,6 +219,7 @@ class CuteMain(QWidget):
                 # TODO move the webserver to a separate file
                 self.webserver = CuteServer()
                 self.webserver.start()
+                self.webserver.setImageWidget( self )
                 
                 print("save")
                 self.filenameResults, extension = QFileDialog.getSaveFileName( self, "Save results as...", defaults.savefile+datetime.datetime.now().strftime('%Y%m%d-%H%M%S')+'.csv')
@@ -469,6 +473,15 @@ class CuteMain(QWidget):
                 self.right.close()
 
 
+        def grabImage(self):
+                image = self.grab().toImage()
+                ba = QByteArray()
+                buf = QBuffer(ba)
+                buf.open(QIODevice.WriteOnly)
+                image.save(buf, "PNG")
+                return ba.data()
+
+
 class CuteManager( QMainWindow ):
         def __init__(self):
                 super().__init__()
@@ -547,6 +560,9 @@ class CuteManager( QMainWindow ):
                 runMenu = menubar.addMenu('&Run')
                 runMenu.addAction(self.playAct)
 
+
+                
+
         def openFile(self,logic=False,fileName=""):
                 if len(fileName)==0:
                         fileName, fileType = QFileDialog.getOpenFileName(self, "Open File", "", "YAML files (*.yml *.yaml)")
@@ -601,55 +617,8 @@ class CuteProperties( QTreeWidget ):
 """
 
 
-class CuteServer(QThread):
-        def run(self):
-                server = HTTPServer(('localhost', 8088), PostHandler)
-                print('Starting server')
-                server.serve_forever()
 
-class PostHandler(BaseHTTPRequestHandler):
-        def do_GET(self):
-                # check what is requested:
-                if self.path.endswith('favicon.ico'):
-                        # TODO implement icon for the web interface
-                        return
-                # this will grab ANY index.html, not necessarily the main one
-                if self.path.endswith('index.html') or self.path=='/':
-                        self.send_response(200)
-                        self.send_header('Content-type', 'text/html')
-                        self.end_headers()
-                        # send the file
-                        with open('dekla_web.html') as htmlfile:
-                                self.html = htmlfile.read()
-                        # encoding is added the the Contect-Type, check it later
-                        self.wfile.write(self.html.encode('utf-8'))
-                
-                if None != re.search('/api/time', self.path):
-                        self.send_response(200)
-                        self.send_header('Content-type','text/html')
-                        self.send_header('Access-Control-Allow-Origin','*')
-                        self.end_headers()
-                        self.wfile.write(str(time.time()).encode('utf-8'))
-                        return
-                #if None != re.search('/api/status', self.path):
-                        #self.send_response(200)
-                        #self.send_header('Content-type','text/html')
-                        #self.send_header('Access-Control-Allow-Origin','*')
-                        #self.end_headers()
-                        #self.wfile.write(str(time.time()).encode('utf-8'))
-                        #return
 
-        def do_POST(self):
-                content_length = int(self.headers['Content-Length'])
-                body = self.rfile.read(content_length)
-                self.send_response(200)
-                self.end_headers()
-                #response = BytesIO()
-                #response.write(b'This is POST request. ')
-                #response.write(b'Received: ')
-                #response.write(body)
-                print(body)
-                #self.wfile.write(response.getvalue())
 
 if __name__ == '__main__':
         label = CuteManager()

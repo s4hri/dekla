@@ -7,6 +7,22 @@
 
 from dekla import *
 
+from PyQt5.QtWidgets import *
+from PyQt5.QtCore import *
+from PyQt5.QtGui import *
+
+from PyQt5.QtMultimedia import *
+from PyQt5.QtMultimediaWidgets import *
+
+import time
+import datetime
+import yaml
+import socket
+import csv
+import random
+
+
+
 class Cir(QObject):
         def __init__(self):
                 super().__init__()
@@ -172,4 +188,4 @@ if __name__ == '__main__':
         label = RandMain()
         label.finishedExperiment.connect(qApp.quit)
         label.show()
-        app.exec()
+        qApp.exec()

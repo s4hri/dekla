@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Dekla interface - Hekate manager sketch</title>
+  <script src="//code.angularjs.org/snapshot/angular.min.js"></script>
+  
+</head>
+<body ng-app="hekateSketch">
+<div>
+    <div ng-controller="HekateController">
+    <table>
+    <tbody>
+    <tr>
+        <td><button type="button" data-ng-click="doStuff()">Do stuff</button></td>
+        <td>http response data: {{data}}</td>
+    </tr>
+    <tr>
+        <td><button type="button" data-ng-click="stopFight()">StopFight</button></td>
+        <td>http response data: {{data}}</td>
+    </tr>
+    <tr>
+        <td><button type="button" data-ng-click="resetFight()">resetFight</button></td>
+        <td>http response data: {{data}}</td>
+    </tr>
+    </tbody>
+    </table>
+
+    
+    </div>
+</div>
+</body>
+</html>
