@@ -9,6 +9,12 @@ import json
 import time
 import io
 
+#
+# TODO add the ability to use external .html file
+# TODO refactor the default .html file to be minimal and universal
+# TODO replace uglyHack with Dekla class
+#      define empty variable in global scope  localDekla=None
+#      check in CuteServer.__init__() if it is empty, then replace with the forwarded one
 
 # <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
 

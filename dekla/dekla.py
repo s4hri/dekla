@@ -33,6 +33,7 @@ class Dekla:
         manager = None
         window = None
         stack = None
+        webserver = None
         appName = "Dekla v0.2"
         savefile = "../data/results_" # and %Y%m%d-%H%M%S
 
