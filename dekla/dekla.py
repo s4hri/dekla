@@ -1,44 +1,42 @@
 #!/usr/bin/env python3
 
-'''   dekla 25
-
-        - webserver integrated (part of the Hekate project)
-        - 
-
-
-'''
-
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 
-from PyQt5.QtMultimedia import *
-from PyQt5.QtMultimediaWidgets import *
+## moved to deklaVideo
+#from PyQt5.QtMultimedia import *
+#from PyQt5.QtMultimediaWidgets import *
 
 import time
 import datetime
-import yaml
 import socket
 import csv
 import random
-
 import io # for StringIO, dummy file
 
-# for webserver:
-import cgi
-from http.server import HTTPServer, BaseHTTPRequestHandler
-import re
-import json
+
+# TODO these need to be split and dekla needs to be fully modular
+#from .deklaWeb import *
+#from .deklaLog import *
+#from .deklaVideo import CuteVideo
+
+# make sure there exists a Qt5 application
+if type(qApp.instance()) is type(None):
+        app = QApplication([])
+
+#log = CuteLog()
+
+class Dekla:
+        db = None
+        log = None
+        manager = None
+        window = None
+        stack = None
+        appName = "Dekla v0.2"
+        savefile = "../data/results_" # and %Y%m%d-%H%M%S
 
 
-from .deklaWeb import *
-
-
-# # this is moved inside CuteManager.runExperiment()
-#with open('posner02.yaml','r') as file:
-        #db = yaml.load(file,Loader=yaml.Loader)
-
-app = QApplication([])
 
 class defaults:
         appName = "Dekla v0.2"
@@ -47,48 +45,6 @@ class defaults:
         screen3 = "Right"
         savefile = "../data/results_" # and %Y%m%d-%H%M%S
 
-class CuteLog:
-        def __init__(self):
-                self.initTime = time.time_ns()
-                try:
-                        self.sock1 = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-                        self.sock1.connect(('127.0.0.1', 50010))
-                except OSError as msg:
-                        self.sock1 = None
-                        print("Please create a logger service if a time log is needed")
-                
-                
-        def log(self,text):
-                
-                if self.sock1 != None:
-                        self.sock1.sendall(text.encode('utf-8'))
-                
-#cuteLog = CuteLog()
-
-class CuteVideo(QVideoWidget):
-        def __init__(self, moviename):
-                super().__init__()
-                self.setMinimumSize(640,480)
-                self.player = QMediaPlayer()
-                self.player.setMedia(QMediaContent(QUrl.fromLocalFile(QFileInfo(moviename).absoluteFilePath())))
-                self.player.setVideoOutput(self)
-                self.player.setNotifyInterval(2) # ms
-                self.player.positionChanged.connect(self.periodicPause)
-        stackedIndex = 0
-        
-        def periodicPause(self,position):
-                # will spit out errors:
-                #  RecursionError: maximum recursion depth exceeded in comparison
-                # if you use anything modifying playing position without checking State
-                # do any modifications inside if statements only when paused!
-                if self.player.state() == QMediaPlayer.PlayingState:
-                        if self.player.duration()>0:
-                                if self.player.duration()-position<10:
-                                        # first pause! always first pause!
-                                        self.player.pause()
-                                        if self.player.isSeekable():
-                                                # correct it to be precisely 10ms before the end
-                                                self.player.setPosition(self.player.duration()-10)
 
 # do not add too much here, this is essentially a keypress forward class!
 #  it makes it possible to have focus on any window and still activate functions from the main one
@@ -131,8 +87,6 @@ class CuteMain(QWidget):
 
                 self.labels = dict()
                 
-                
-                
                 self.labels["instructions"] = CuteLabel(self.helpMessageBoxText)
                 self.labels["instructions"].setFont( QFont( "Arial", 14, QFont.Bold) )
                 self.labels["instructions"].setAlignment(Qt.AlignCenter)
@@ -142,84 +96,10 @@ class CuteMain(QWidget):
                 self.layoutStack['main'].addWidget(self.labels['instructions'])
                 index += 1
                 
-                #for movie in movies:
-                        #print(index,movie)
-                        #self.players[movie] = CuteVideo(movies[movie])
-                        #self.players[movie].player.setPosition(0)
-                        #self.layoutStack['main'].addWidget(self.players[movie])
-                        ## do this automatically next time: (not reliable)
-                        #self.players[movie].stackedIndex = index
-                        ## maybe one more dictionary that stores indices?
-                        #index = index + 1
-                        
                 self.layoutStack['main'].setContentsMargins(0,0,0,0)
                 self.layoutStack['main'].setCurrentIndex(0)
                 
                 self.setLayout(self.layoutStack['main'])
-                
-                # main done
-                
-                #print("LEFT")
-                #self.left = CuteSideWindow(self)
-                #self.left.setWindowTitle(defaults.screen2)
-                #self.left.setWindowTitle('Left')
-                #self.layoutStack['left'] = QStackedLayout()
-                #self.labels["left V"] = CuteLabel("V")
-                ##self.labels["left V"].setFont( QFont( "Arial", 100, QFont.Bold) )
-                #self.labels["left V"].setStyleSheet( 'font: bold 100px'  )
-                #self.labels["left V"].setAlignment(Qt.AlignCenter)
-                #self.labels["left T"] = CuteLabel("T")
-                #self.labels["left T"].setFont( QFont( "Arial", 100, QFont.Bold) )
-                #self.labels["left T"].setAlignment(Qt.AlignCenter)
-                ##self.labels["left T"].setStyleSheet("border: solid 10px grey;  background-color: rgba(255, 0, 0,127); color:rgb(0,255,0)");
-                #self.labels["left empty"] = CuteLabel() # QWidget? 
-                #self.layoutStack['left'].addWidget(self.labels["left empty"])  # 0
-                #self.layoutStack['left'].addWidget(self.labels["left V"]) # 1
-                #self.layoutStack['left'].addWidget(self.labels["left T"]) # 2
-                ##this should be automatic:
-                #self.labels["left empty"].stackedIndex = 0
-                #self.labels["left V"].stackedIndex = 1
-                #self.labels["left T"].stackedIndex = 2
-                #self.left.setLayout(self.layoutStack['left'])
-                #self.left.show()
-
-                #self.labels["left empty"].stack = 'left'
-                #self.labels["left V"].stack = 'left'
-                #self.labels["left T"].stack = 'left'
-
-                
-                #print("RIGHT")
-                #self.right = CuteSideWindow(self)
-                #self.right.setWindowTitle('Right')
-                #self.right.setWindowTitle(defaults.screen3)
-                #self.layoutStack['right'] = QStackedLayout()
-                #self.labels["right V"] = CuteLabel("V")
-                #self.labels["right V"].setFont( QFont( "Arial", 100, QFont.Bold) )
-                #self.labels["right V"].setAlignment(Qt.AlignCenter)
-                #self.labels["right T"] = CuteLabel("T")
-                #self.labels["right T"].setFont( QFont( "Arial", 100, QFont.Bold) )
-                #self.labels["right T"].setAlignment(Qt.AlignCenter)
-                #self.labels["right empty"] = CuteLabel() # QWidget? 
-                #self.layoutStack['right'].addWidget(self.labels["right empty"])  # 0
-                #self.layoutStack['right'].addWidget(self.labels["right V"]) # 1
-                #self.layoutStack['right'].addWidget(self.labels["right T"]) # 2
-                ##this should be automatic:
-                #self.labels["right empty"].stackedIndex = 0
-                #self.labels["right V"].stackedIndex = 1
-                #self.labels["right T"].stackedIndex = 2
-                
-                #self.labels["right empty"].stack = 'right'
-                #self.labels["right V"].stack = 'right'
-                #self.labels["right T"].stack = 'right'
-                
-                #print("layout")
-                #self.right.setLayout(self.layoutStack['right'])
-                #self.right.show()
-
-                # TODO move the webserver to a separate file
-                self.webserver = CuteServer()
-                self.webserver.start()
-                self.webserver.setImageWidget( self )
                 
                 print("save")
                 self.filenameResults, extension = QFileDialog.getSaveFileName( self, "Save results as...", defaults.savefile+datetime.datetime.now().strftime('%Y%m%d-%H%M%S')+'.csv')
@@ -231,12 +111,8 @@ class CuteMain(QWidget):
         def full(self):
                 if not self.windowState() == Qt.WindowFullScreen:
                         self.setWindowState(Qt.WindowFullScreen)
-                        self.left.setWindowState(Qt.WindowFullScreen)
-                        self.right.setWindowState(Qt.WindowFullScreen)
                 else:
                         self.setWindowState(Qt.WindowNoState)
-                        self.left.setWindowState(Qt.WindowNoState)
-                        self.right.setWindowState(Qt.WindowNoState)
                         
 
         def keyPressEvent(self,event):
@@ -261,10 +137,8 @@ class CuteMain(QWidget):
                                 self.finishedExperiment.emit()
                 
                 if event.key() == Qt.Key_F9:
+                        print("Starting experiment")
                         self.startExperiment()
-                        #self.players['close left'].player.play()
-                        #self.player1.player.play()
-                        print("Sent play")
                 if event.key() == Qt.Key_F5:
                         if not self.windowState() == Qt.WindowFullScreen:
                                 self.full()

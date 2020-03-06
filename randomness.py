@@ -6,13 +6,14 @@
 """
 
 from dekla import *
+from dekla.deklaWeb import *
 
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 
-from PyQt5.QtMultimedia import *
-from PyQt5.QtMultimediaWidgets import *
+#from PyQt5.QtMultimedia import *
+#from PyQt5.QtMultimediaWidgets import *
 
 import time
 import datetime
@@ -20,6 +21,7 @@ import yaml
 import socket
 import csv
 import random
+
 
 
 
@@ -38,14 +40,15 @@ class Cir(QObject):
                 self.circle3.setBrush(Qt.blue)
                 self.circle5.setBrush(Qt.white)
                 
-                self.circle2.setRotation(120)
-                self.circle3.setRotation(240)
+                self.circle1.setRotation(90)
+                self.circle2.setRotation(120+90)
+                self.circle3.setRotation(240+90)
                 
                 
         def _set_pos(self, pos):
-                self.circle1.setRotation(pos.x())
-                self.circle2.setRotation(pos.x()+120)
-                self.circle3.setRotation(pos.x()+240)
+                self.circle1.setRotation(pos.x()+90)
+                self.circle2.setRotation(pos.x()+120+90)
+                self.circle3.setRotation(pos.x()+240+90)
         pos = pyqtProperty(QPointF, fset=_set_pos)    
 
 class CuteAnim(QGraphicsView):
@@ -146,6 +149,11 @@ class RandMain(CuteMain):
                 self.cuteAnim = CuteAnim()
                 self.layoutStack['main'].addWidget(self.cuteAnim)
                 self.setMinimumSize(1920,1080)
+
+                ## TODO move the webserver to a separate file
+                #self.webserver = CuteServer()
+                #self.webserver.start()
+                #self.webserver.setImageWidget( self )
                 
                 pass
         def keyPressEvent(self,event):
@@ -184,6 +192,8 @@ class RandMain(CuteMain):
         def trialsLeft(self):
                 return 0
 
+if type(qApp.instance()) is type(None):
+        app = QApplication([])
 if __name__ == '__main__':
         label = RandMain()
         label.finishedExperiment.connect(qApp.quit)

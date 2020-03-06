@@ -1,0 +1,133 @@
+info:
+  desc: Posner experiment sketch 11
+  date: 20200131-1000
+  entrypoint: closed left
+  movies:
+#    close left: movies/close left final0001-0105.mp4
+#    mutual left: movies/mutual left final0001-0105.mp4
+#    return left: movies/return left final0001-0065.mp4
+#    close right: movies/close right final0001-0105.mp4
+#    mutual right: movies/mutual right final0001-0105.mp4
+#    return right: movies/return right final0066-0130.mp4
+    close left: movies/close_left.mp4
+    mutual left: movies/mutual_left.mp4
+    return left: movies/return_left.mp4
+    close right: movies/close_right.mp4
+    mutual right: movies/mutual_right.mp4
+    return right: movies/return_right.mp4
+  screens:
+    main:
+      movie:
+        name: close left
+      movie:
+        name: mutual left
+      movie:
+        name: return left
+      movie:
+        name: close right
+      movie:
+        name: mutual right
+      movie:
+        name: return right
+    left:
+      label:
+        name: left blank
+        text: ""
+      label:
+        name: left V
+        text: V
+        font:
+          type: Arial
+          size: 100
+          style: QFont.Bold
+      label:
+        name: left T
+        text: T
+        font:
+          type: Arial
+          size: 100
+          style: QFont.Bold
+    right:
+      label:
+        name: right blank
+        text: ""
+      label:
+        name: right V
+        text: V
+        font:
+          type: Arial
+          size: 100
+          style: QFont.Bold
+      label:
+        name: right T
+        text: T
+        font:
+          type: Arial
+          size: 100
+          style: QFont.Bold
+#places:
+  #close left:
+    #movie: close left
+      #start: 0
+      #end: -10
+  #mutual left:
+    #movie: mutual left
+      #start: 0
+      #end: -10
+  #return left:
+    #movie: return left
+      #start: 0
+      #end: -10
+  #close right:
+    #movie: close right
+      #start: 0
+      #end: -10
+  #mutual right:
+    #movie: mutual right
+      #start: 0
+      #end: -10
+  #return right:
+    #movie: return right
+      #start: 0
+      #end: -10
+  #right t:
+    #label: T
+
+trial: # they are being popped, so they will go from last till the first
+  0:
+    place1: close left
+    place2: left T
+    place3: return left
+    place4: left empty
+    key: T
+  1:
+    place1: close left
+    place2: left V
+    place3: return left
+    place4: left empty
+    key: V
+  2:
+    place1: mutual left
+    place2: right T
+    place3: return left
+    place4: right empty
+    key: T
+  3:
+    place1: close left
+    place2: left V
+    place3: return left
+    place4: left empty
+    key: V
+  4:
+    place1: mutual right
+    place2: left V
+    place3: return right
+    place4: left empty
+    key: V
+  5:
+    place1: close right
+    place2: right V
+    place3: return right
+    place4: right empty
+    key: V
+  
