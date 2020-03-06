@@ -17,7 +17,6 @@ import socket
 import csv
 import random
 
-app = QApplication([])
 
 movies = { 'close left': 'movies/close_left.mp4',
            'mutual left': 'movies/mutual_left.mp4',
@@ -206,6 +205,9 @@ class RandMain(CuteMain):
         def trialsLeft(self):
                 return 0
 
+
+if type(qApp.instance()) is type(None):
+        app = QApplication([])
 if __name__ == '__main__':
         label = RandMain()
         label.finishedExperiment.connect(qApp.quit)
