@@ -28,24 +28,17 @@ if type(qApp.instance()) is type(None):
 if __name__ == '__main__':
         widget = QWidget()
 
-        #slider = QSlider()
-        #slider.setMinimum( 0 )
-        #slider.setMaximum( 360 )
-
         animatedLabel = AnimatedLabel("red.png")
-        #slider.valueChanged.connect( animatedLabel.angle )
         
         anim = QPropertyAnimation(animatedLabel, b"angle")
         anim.setDuration(1000)
         anim.setEasingCurve(QEasingCurve.Linear)
         anim.setKeyValueAt(0.0, float(0))                   
         anim.setKeyValueAt(1.0, float(180))
-
+        
         button = QPushButton()
         button.clicked.connect( anim.start )
-
- 
-
+        
         layout = QVBoxLayout()
         layout.addWidget(button)
         layout.addWidget(animatedLabel.label)
