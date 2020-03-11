@@ -10,7 +10,7 @@ from PyQt5.QtGui import *
 
 import popplerqt5
 
-class CuteTime( QLabel ):
+class CutePDF( QLabel ):
         def __init__(self,image=None):
                 super().__init__()
                 # if type(image) is not type(None):

@@ -7,6 +7,12 @@ from PyQt5.QtGui import *
 from PyQt5.QtMultimedia import *
 from PyQt5.QtMultimediaWidgets import *
 
+#
+#  TODO try to go low level, to achieve real frame-to-frame perfection
+#
+#
+
+
 class CuteVideo(QVideoWidget):
         def __init__(self, moviename):
                 super().__init__()

@@ -27,24 +27,79 @@ if type(qApp.instance()) is type(None):
 
 #log = CuteLog()
 
-class Dekla:
+
+class Dekla(QObject):
         db = None
         log = None
         manager = None
-        window = None
-        stack = None
+        windows = None
+        stacks = None
+        widgets = None
         webserver = None
+        
         appName = "Dekla v0.2"
         savefile = "../data/results_" # and %Y%m%d-%H%M%S
 
+        def __init__(self):
+                super().__init__()
+                self.windows = dict()
+                self.stacks = dict()
+
+        def addStack(self,name):
+                if name not in self.windows:
+                        self.windows[name] = CuteWindow(self)
+                        self.windows[name].setWindowTitle(name)
+                
+                self.stacks[name] = CuteStack(self.windows[name])
+
+        def addWidget(self,name,widget):
+                pass
+        def addVideo(self,name):
+                pass
+        def addLabel(self,name):
+                pass
+
+        def show(self):
+                super().show()
+                for window in self.windows:
+                        self.windows[window].show()
+
+class CuteWindow(QWidget):
+        def __init__(self,cuteMain):
+                super().__init__()
+                self.cuteMain = cuteMain
+                self.setMinimumSize(640,480)
+        def keyPressEvent(self,event):
+                self.cuteMain.keyPressEvent(event)
+
+class CuteStack(QStackedLayout):
+        def __init__(self,window):
+                
+        def addLabel(self,label):
+                if type(label) is type(QLabel()):
+                        pass
+                else:
+                        pass
+                self.labels["instructions"] = CuteLabel(self.helpMessageBoxText)
+                self.labels["instructions"].setFont( QFont( "Arial", 14, QFont.Bold) )
+                self.labels["instructions"].setAlignment(Qt.AlignCenter)
+                #self.labels["left T"].setStyleSheet("border: solid 10px grey;  background-color: rgba(255, 0, 0,127); color:rgb(0,255,0)");
+                self.labels["instructions"].setStyleSheet("background-color: rgba(120, 120, 120,30)");
+        def addVideo(self,movies):
+                if type(movies) is type(dict()):
+                        for movie in movies:
+                                self.addWidget = CuteVideo(movies[movie])
+                                self.players[movie].player.setPosition(0)
 
 
-class defaults:
-        appName = "Dekla v0.2"
-        screen1 = "Main"
-        screen2 = "Left"
-        screen3 = "Right"
-        savefile = "../data/results_" # and %Y%m%d-%H%M%S
+
+# REMOVE:
+#class defaults:
+        #appName = "Dekla v0.2"
+        #screen1 = "Main"
+        #screen2 = "Left"
+        #screen3 = "Right"
+        #savefile = "../data/results_" # and %Y%m%d-%H%M%S
 
 
 # do not add too much here, this is essentially a keypress forward class!
@@ -62,6 +117,7 @@ class CuteSideWindow(QWidget):
 class CuteLabel(QLabel):
         stackedIndex = 0
         stack = '' # left, right, main
+
 
 class CuteMain(QWidget):
         helpMessageBoxText = """
@@ -172,175 +228,175 @@ class CuteMain(QWidget):
         timer = None
         time_us = 0 # microseconds!
         time_max = 0
-        def startExperiment(self):
-                #self.setWindowState( Qt.WindowFullScreen )
-                #self.right.setWindowState( Qt.WindowFullScreen )
-                #self.left.setWindowState( Qt.WindowFullScreen )
+        #def startExperiment(self):
+                ##self.setWindowState( Qt.WindowFullScreen )
+                ##self.right.setWindowState( Qt.WindowFullScreen )
+                ##self.left.setWindowState( Qt.WindowFullScreen )
 
-                self.sliceTrial()
+                #self.sliceTrial()
 
-                # TODO reverse naming convention to self.resultsFile self.resultsCSV
+                ## TODO reverse naming convention to self.resultsFile self.resultsCSV
                 
                 
-                #datetime.datetime.now().strftime('%Y%m%d-%H%M%S')                
+                ##datetime.datetime.now().strftime('%Y%m%d-%H%M%S')                
                 
-                if len(self.filenameResults):
-                        self.fileResults = open(self.filenameResults,'w+') # or a+ if appending
-                else:
-                        # if you choose not to save, a dummy file:
-                        self.fileResults = io.StringIO()
+                #if len(self.filenameResults):
+                        #self.fileResults = open(self.filenameResults,'w+') # or a+ if appending
+                #else:
+                        ## if you choose not to save, a dummy file:
+                        #self.fileResults = io.StringIO()
                 
                 
-                self.csvResults = csv.DictWriter(self.fileResults,list(self.trial.keys()))
-                if self.fileResults.tell()==0:
-                        self.csvResults.writeheader()
+                #self.csvResults = csv.DictWriter(self.fileResults,list(self.trial.keys()))
+                #if self.fileResults.tell()==0:
+                        #self.csvResults.writeheader()
                 
 
 
 
-                #self.players['close left'].player.play()
+                ##self.players['close left'].player.play()
 
-                #self.currentVideo = 'close left'
-                #self.currentVideo = self.trial['place1']
+                ##self.currentVideo = 'close left'
+                ##self.currentVideo = self.trial['place1']
 
-                #self.layoutStack['main'].setCurrentIndex( self.players[self.currentVideo].stackedIndex )
-                #self.players[self.currentVideo].player.play()
+                ##self.layoutStack['main'].setCurrentIndex( self.players[self.currentVideo].stackedIndex )
+                ##self.players[self.currentVideo].player.play()
                 
-                #The robot has its eyes closed
+                ##The robot has its eyes closed
                 
-                self.currentVideo = 'close left' # default, TODO set it to index 0
+                #self.currentVideo = 'close left' # default, TODO set it to index 0
                 
-                # prepare
-                #self.time_us = time.time_ns()/1000
-                self.time_us = time.time()*1e6
-                self.nextEvent = 0
-#                self.timeEvent = time.time_ns()/1000
-                self.timeEvent = time.time()*1e6
+                ## prepare
+                ##self.time_us = time.time_ns()/1000
+                #self.time_us = time.time()*1e6
+                #self.nextEvent = 0
+##                self.timeEvent = time.time_ns()/1000
+                #self.timeEvent = time.time()*1e6
                 
-                # start
-                self.timer = QTimer()
-                self.timer.timeout.connect(self.stepExperiment)
-                self.timer.start()
+                ## start
+                #self.timer = QTimer()
+                #self.timer.timeout.connect(self.stepExperiment)
+                #self.timer.start()
                 
-                #It opens its eyes
-                #It either looks straight towards participants' eyes or down.
-                #It looks towards the left or right screen
-                #After a specific time of the initiation of the robot's lateral movement towards the left/right screen (this time is called SOA, here it should be 1s), the target letter (T or V) appears. We have prepared the videos which embed steps 1-4 with the specific SOA. That means that when the video finishes the letter should appear directly.
-                #The letter should appear for 200 ms. The central robot video should be stuck to the last frame (when the letters are presented) but we also want to continue listening to the sound of the video. Participants can respond from the appearance of the letter and on. Only when they respond the video stops being presented and we go to step 7
-                #The robot returns to its initial position with eyes closed and the next trial starts. We have prepared a video for this.
+                ##It opens its eyes
+                ##It either looks straight towards participants' eyes or down.
+                ##It looks towards the left or right screen
+                ##After a specific time of the initiation of the robot's lateral movement towards the left/right screen (this time is called SOA, here it should be 1s), the target letter (T or V) appears. We have prepared the videos which embed steps 1-4 with the specific SOA. That means that when the video finishes the letter should appear directly.
+                ##The letter should appear for 200 ms. The central robot video should be stuck to the last frame (when the letters are presented) but we also want to continue listening to the sound of the video. Participants can respond from the appearance of the letter and on. Only when they respond the video stops being presented and we go to step 7
+                ##The robot returns to its initial position with eyes closed and the next trial starts. We have prepared a video for this.
 
         finishedExperiment = pyqtSignal()
-        def stepExperiment(self):
-                #
-                #  this is from sketch11, incompatible with mods in sketch12 (dynamic .yaml interpreter)
-                #    DO NOT MIX THEIR CODE !
-                #
-                #  requires self.currentVideo to be already set
+        #def stepExperiment(self):
+                ##
+                ##  this is from sketch11, incompatible with mods in sketch12 (dynamic .yaml interpreter)
+                ##    DO NOT MIX THEIR CODE !
+                ##
+                ##  requires self.currentVideo to be already set
                 
-                #timeNew = time.time_ns()/1000 # microseconds
-                timeNew = time.time()*1e6 # microseconds
+                ##timeNew = time.time_ns()/1000 # microseconds
+                #timeNew = time.time()*1e6 # microseconds
                 
-                # time passed since the last event:
-                timePassed = (timeNew - self.timeEvent)/1000 # milliseconds
+                ## time passed since the last event:
+                #timePassed = (timeNew - self.timeEvent)/1000 # milliseconds
                 
-                #print(timeNew - self.time_us)
-                if timeNew - self.time_us > self.time_max:
-                        self.time_max = timeNew - self.time_us
-                        print("new max",self.time_max)
-                self.time_us=timeNew
-                #print("time passed",timePassed)
+                ##print(timeNew - self.time_us)
+                #if timeNew - self.time_us > self.time_max:
+                        #self.time_max = timeNew - self.time_us
+                        #print("new max",self.time_max)
+                #self.time_us=timeNew
+                ##print("time passed",timePassed)
 
-                if self.nextEvent==0: # wait for the head to go left
-                        print("DEBUG: event 0")
-                        self.players[ self.currentVideo].player.setPosition(0) # grab a pencil and rewind tape
-                        self.currentVideo = self.trial['place1']
-
-                        self.layoutStack['main'].setCurrentIndex( self.players[self.currentVideo].stackedIndex )
-                        self.players[self.currentVideo].player.play()
-                        self.nextEvent += 1
-                        self.timeEvent = timeNew # reset time
-
-                        print(f"DEBUG: {self.nextEvent},{self.timeEvent}")
-                if self.nextEvent==1: # wait for the head to go left
-                        if self.players[self.currentVideo].player.state() == QMediaPlayer.PausedState:
-                                print("DEBUG: paused")
-                                self.nextEvent += 1
-                                self.timeEvent = timeNew # reset time
-                                self.correctInput = '' # clear input
-                                place2 = self.trial['place2']
-                                stack = self.labels[place2].stack
-                                self.layoutStack[stack].setCurrentIndex(self.labels[place2].stackedIndex) # show letter
-                elif self.nextEvent==2: # show letter
-                        if timePassed>200:
-                                place4 = self.trial['place4']
-                                stack = self.labels[place4].stack
-                                self.layoutStack[stack].setCurrentIndex(self.labels[place4].stackedIndex) # hide letter
-                        if len(self.correctInput)>0: # check for input flag
-                                if self.trial['key']==self.correctInput:
-                                        print("User took:",timePassed,"ms to hit the right key")
-                                        self.results['key'] = timePassed
-                                place4 = self.trial['place4']
-                                stack = self.labels[place4].stack
-                                self.layoutStack[stack].setCurrentIndex(self.labels[place4].stackedIndex) # be sure about hiding the letter!
-                                self.nextEvent += 1
-                                self.timeEvent = timeNew # reset time
-                        if timePassed>1500: # timeout
-                                self.nextEvent += 1
-                                self.timeEvent = timeNew # reset time
-                                print("user input timed out")
-                elif self.nextEvent==3: 
-                        self.players[ self.currentVideo].player.setPosition(0) # grab a pencil and rewind tape
-                        self.currentVideo = self.trial['place3']
-                        self.layoutStack['main'].setCurrentIndex( self.players[self.currentVideo].stackedIndex )
-                        self.players[self.currentVideo].player.play()
-                        self.timeEvent = timeNew # reset time
-                        self.nextEvent += 1
-                elif self.nextEvent==4:
-                        if timePassed>2000:
-                                if self.players[self.currentVideo].player.state() == QMediaPlayer.PausedState:
-                                        self.nextEvent += 1
-                                        self.timeEvent = timeNew # reset time
-                elif self.nextEvent==5: # reset
+                #if self.nextEvent==0: # wait for the head to go left
+                        #print("DEBUG: event 0")
                         #self.players[ self.currentVideo].player.setPosition(0) # grab a pencil and rewind tape
-                        #self.currentVideo = 'mutual left
-                        #self.layoutStack.setCurrentIndex(1)
-                        #self.players[ self.currentVideo ].player.play()
+                        #self.currentVideo = self.trial['place1']
+
+                        #self.layoutStack['main'].setCurrentIndex( self.players[self.currentVideo].stackedIndex )
+                        #self.players[self.currentVideo].player.play()
+                        #self.nextEvent += 1
+                        #self.timeEvent = timeNew # reset time
+
+                        #print(f"DEBUG: {self.nextEvent},{self.timeEvent}")
+                #if self.nextEvent==1: # wait for the head to go left
+                        #if self.players[self.currentVideo].player.state() == QMediaPlayer.PausedState:
+                                #print("DEBUG: paused")
+                                #self.nextEvent += 1
+                                #self.timeEvent = timeNew # reset time
+                                #self.correctInput = '' # clear input
+                                #place2 = self.trial['place2']
+                                #stack = self.labels[place2].stack
+                                #self.layoutStack[stack].setCurrentIndex(self.labels[place2].stackedIndex) # show letter
+                #elif self.nextEvent==2: # show letter
+                        #if timePassed>200:
+                                #place4 = self.trial['place4']
+                                #stack = self.labels[place4].stack
+                                #self.layoutStack[stack].setCurrentIndex(self.labels[place4].stackedIndex) # hide letter
+                        #if len(self.correctInput)>0: # check for input flag
+                                #if self.trial['key']==self.correctInput:
+                                        #print("User took:",timePassed,"ms to hit the right key")
+                                        #self.results['key'] = timePassed
+                                #place4 = self.trial['place4']
+                                #stack = self.labels[place4].stack
+                                #self.layoutStack[stack].setCurrentIndex(self.labels[place4].stackedIndex) # be sure about hiding the letter!
+                                #self.nextEvent += 1
+                                #self.timeEvent = timeNew # reset time
+                        #if timePassed>1500: # timeout
+                                #self.nextEvent += 1
+                                #self.timeEvent = timeNew # reset time
+                                #print("user input timed out")
+                #elif self.nextEvent==3: 
+                        #self.players[ self.currentVideo].player.setPosition(0) # grab a pencil and rewind tape
+                        #self.currentVideo = self.trial['place3']
+                        #self.layoutStack['main'].setCurrentIndex( self.players[self.currentVideo].stackedIndex )
+                        #self.players[self.currentVideo].player.play()
+                        #self.timeEvent = timeNew # reset time
+                        #self.nextEvent += 1
+                #elif self.nextEvent==4:
+                        #if timePassed>2000:
+                                #if self.players[self.currentVideo].player.state() == QMediaPlayer.PausedState:
+                                        #self.nextEvent += 1
+                                        #self.timeEvent = timeNew # reset time
+                #elif self.nextEvent==5: # reset
+                        ##self.players[ self.currentVideo].player.setPosition(0) # grab a pencil and rewind tape
+                        ##self.currentVideo = 'mutual left
+                        ##self.layoutStack.setCurrentIndex(1)
+                        ##self.players[ self.currentVideo ].player.play()
                         
-                        self.timeEvent = timeNew # reset time
-                        self.nextEvent += 1
-                elif self.nextEvent==6:
-                        self.nextEvent = 0
-                        self.saveResults()
-                        #if  > 0: # yaml-based
-                        if self.trialsLeft()>0:
-                                self.sliceTrial()
-                        else:
-                                self.fileResults.close()
-                                self.pauseExperiment()
-                                self.labels['instructions'].setText('press q to return to main menu' )
-                                self.layoutStack['main'].setCurrentIndex(0)
+                        #self.timeEvent = timeNew # reset time
+                        #self.nextEvent += 1
+                #elif self.nextEvent==6:
+                        #self.nextEvent = 0
+                        #self.saveResults()
+                        ##if  > 0: # yaml-based
+                        #if self.trialsLeft()>0:
+                                #self.sliceTrial()
+                        #else:
+                                #self.fileResults.close()
+                                #self.pauseExperiment()
+                                #self.labels['instructions'].setText('press q to return to main menu' )
+                                #self.layoutStack['main'].setCurrentIndex(0)
                                 
-        def trialsLeft(self):
-                return len(trials) # list of dictionaries
-                #return len(self.db['trial']) # yaml-based dict of a dict
+        #def trialsLeft(self):
+                #return len(trials) # list of dictionaries
+                ##return len(self.db['trial']) # yaml-based dict of a dict
 
-        def sliceTrial(self):
-                # # yaml-based:
-                #trialTuple = self.db['trial'].popitem() # will return a tuple (name,dict)
-                #self.trial = trialTuple[1] # extract only the dictionary
+        #def sliceTrial(self):
+                ## # yaml-based:
+                ##trialTuple = self.db['trial'].popitem() # will return a tuple (name,dict)
+                ##self.trial = trialTuple[1] # extract only the dictionary
                 
-                self.trial = trials.pop(0)
-                self.results = self.trial # prepare results
+                #self.trial = trials.pop(0)
+                #self.results = self.trial # prepare results
                 
-        def pauseExperiment(self):
-                self.timer.stop()
-                #self.players['close left'].player.stop()
-                print("Max recorded delay in stepExperiment:",self.time_max,"us")
+        #def pauseExperiment(self):
+                #self.timer.stop()
+                ##self.players['close left'].player.stop()
+                #print("Max recorded delay in stepExperiment:",self.time_max,"us")
 
-        def saveResults(self):
-                # DELETED, pasted into snippet_089_csv.py
-                self.csvResults.writerow(self.results)
-                pass
+        #def saveResults(self):
+                ## DELETED, pasted into snippet_089_csv.py
+                #self.csvResults.writerow(self.results)
+                #pass
 
         def closeEvent(self,event):
                 super().closeEvent(event)
@@ -471,28 +527,16 @@ class CuteManager( QMainWindow ):
                 self.windowHandle().setVisibility(QWindow.Windowed)
         
         
-class CuteTextEditor( QTextEdit ):
-        def __init__(self):
-                super().__init__()
-                pass
+#class CuteTextEditor( QTextEdit ):
+        #def __init__(self):
+                #super().__init__()
+                #pass
 
 
-class CuteProperties( QTreeWidget ):
-        def __init__(self):
-                super().__init__()
-                pass
-
-""" web server part
-
-        - why QThread? because I will be using signals/slots to transfer data
-          and using Qt5 event handler is a bit safer, but slower
-
-
-
-"""
-
-
-
+#class CuteProperties( QTreeWidget ):
+        #def __init__(self):
+                #super().__init__()
+                #pass
 
 
 if __name__ == '__main__':

@@ -9,15 +9,18 @@ from PyQt5.QtGui import *
 from PyQt5.QtSvg import *
 
 
-#class tmp1(QLabel):
-        #def paintEvent(self,event):
-                #super().paintEvent(event)
-                #painter = QPainter(self)
-                #renderer =  QSvgRenderer('testsvg1.svg')
-                ##widget.resize(renderer.defaultSize())
-                #renderer.render(painter)
-        #def resizeEvent(self,event):
-                #super().resizeEvent(event)
+class CuteSVG(QLabel):
+        def __init__(self,svgfile):
+                # buffer the svg file?
+                self.filename = svgfile
+        def paintEvent(self,event):
+                super().paintEvent(event)
+                painter = QPainter(self)
+                renderer =  QSvgRenderer(self.filename)
+                #widget.resize(renderer.defaultSize())
+                renderer.render(painter)
+        def resizeEvent(self,event):
+                super().resizeEvent(event)
                 
 
 # or:
