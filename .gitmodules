@@ -1,0 +1,4 @@
+[submodule "docker-scripts"]
+	path = scripts
+	url = https://github.com/s4hri/docker-scripts
+	branch = master
