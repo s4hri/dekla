@@ -134,11 +134,16 @@ class Dekla(QObject):
                 with open(self.trialsFileName,'r') as csvfile:
                         csvread = csv.DictReader(csvfile)
                         self.trialsFull = [dict(row) for row in csvread]
+                self.resetTrials()
+
+        def resetTrials(self):
                 self.trials = self.trialsFull[:]
+                self.trialcounter = 0
 
         def sliceTrial(self):
                 self.trial = self.trials.pop(0)
                 self.result = self.trial.copy() # prepare results
+                self.trialcounter += 1
 
         # Note: custom class Keyboard is out, see sketch253_keyboard_handler.py
         #       storage from sketch254_keyboard_dict.py is in:
