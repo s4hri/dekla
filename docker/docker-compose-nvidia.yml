@@ -1,0 +1,42 @@
+version: '3.8'
+
+services:
+
+  exp:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        ICUB_DOCKER: "${ICUB_DOCKER_NVIDIA}"
+        LOCAL_USER_ID: ${LOCAL_USER_ID}
+    container_name: ${EXP_NAME}
+    image: iitschri/${EXP_NAME}:${EXP_VER}
+
+    network_mode: "host"
+    ports:
+      - "10000:10000"
+
+    environment:
+      - "DISPLAY=${DISPLAY}"
+      - "PULSE_SERVER=unix:${XDG_RUNTIME_DIR}/pulse/native"
+
+    privileged: true
+    stdin_open: true
+    tty: true
+
+    device_requests:
+      - capabilities:
+        - gpu
+
+    volumes:
+      - type: bind
+        source: ./init
+        target: /home/docky/init
+      - type: bind
+        source: ../apps
+        target: /home/docky/apps
+      - type: bind
+        source: ${XDG_RUNTIME_DIR}/pulse
+        target: ${XDG_RUNTIME_DIR}/pulse
+
+    entrypoint: ["bash", "/home/docky/init/init.sh"]

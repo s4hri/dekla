@@ -1,0 +1,39 @@
+version: '3.8'
+
+services:
+
+  dekla:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        SRC_IMAGE: "${SRC_IMAGE}"
+        LOCAL_USER_ID: ${LOCAL_USER_ID}
+    container_name: ${DOCKER_NAME}
+    image: iitschri/${DOCKER_NAME}:${DOCKER_VER}
+
+    network_mode: "host"
+    ports:
+      - "10000:10000"
+
+    environment:
+      - "DISPLAY=${DISPLAY}"
+      - "PULSE_SERVER=unix:${XDG_RUNTIME_DIR}/pulse/native"
+
+    privileged: true
+    stdin_open: true
+    tty: true
+
+    volumes:
+      - type: bind
+        source: ../dekla
+        target: /home/docky/dekla
+      - type: bind
+        source: ../examples
+        target: /home/docky/examples
+      - type: bind
+        source: ${XDG_RUNTIME_DIR}/pulse
+        target: ${XDG_RUNTIME_DIR}/pulse
+
+volumes:
+  apps:

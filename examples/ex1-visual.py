@@ -22,12 +22,13 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 """
 
+
 from dekla.core import DeklaMaster
-from dekla.visual import GUIManager
+from dekla.visual import QtGUIManager
 from dekla.audio import SoundManager
 from dekla.input import KeyboardManager
 
 DM = DeklaMaster()
-GM = GUIManager()
+GM = QtGUIManager()
 KM = KeyboardManager()
 SM = SoundManager()
