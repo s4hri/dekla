@@ -2,15 +2,15 @@ version: '3.8'
 
 services:
 
-  exp:
+  dekla:
     build:
       context: .
       dockerfile: Dockerfile
       args:
-        ICUB_DOCKER: "${ICUB_DOCKER_NVIDIA}"
+        SRC_IMAGE: "${SRC_IMAGE_NVIDIA}"
         LOCAL_USER_ID: ${LOCAL_USER_ID}
-    container_name: ${EXP_NAME}
-    image: iitschri/${EXP_NAME}:${EXP_VER}
+    container_name: ${DOCKER_NAME}
+    image: iitschri/${DOCKER_NAME}:${DOCKER_VER}
 
     network_mode: "host"
     ports:
@@ -30,13 +30,11 @@ services:
 
     volumes:
       - type: bind
-        source: ./init
-        target: /home/docky/init
+        source: ../dekla
+        target: /home/docky/dekla
       - type: bind
-        source: ../apps
-        target: /home/docky/apps
+        source: ../examples
+        target: /home/docky/examples
       - type: bind
         source: ${XDG_RUNTIME_DIR}/pulse
         target: ${XDG_RUNTIME_DIR}/pulse
-
-    entrypoint: ["bash", "/home/docky/init/init.sh"]
