@@ -1,6 +1,7 @@
+"""
 MIT License
 
-Copyright (c) 2020 Social Cognition in Human-Robot Interaction
+Copyright (c) 2020 Davide De Tommaso, Adam Lukomski - Social Cognition in Human-Robot Interaction
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -19,3 +20,11 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
+"""
+
+from dekla.core import DeklaModule
+
+class KeyboardManager(DeklaModule):
+
+    def __init__(self, deklamaster_address=('localhost', 9966)):
+        DeklaModule.__init__(self, deklamaster_address)
