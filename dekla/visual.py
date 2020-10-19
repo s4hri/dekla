@@ -118,12 +118,15 @@ class QtGUIManager(DeklaModule, QObject):
 
     def __init__(self, deklamaster_address=('localhost', 9966)):
         DeklaModule.__init__(self, deklamaster_address)
-        self._QApp = QApplication([])
         self._widgets = dict()
         self._widgets['main'] = MainWindow(self)
         self._fullscreen_mode = GUIConfig.FULLSCREEN_DEFAULT
-        self.show()
-        self._QApp.exec()
+        if not qApp.instance():
+            self._QApp = QApplication([])
+            self.show()
+            self._QApp.exec()
+        else:
+            self.show()
 
     def show(self):
         for widget in self._widgets.values():
