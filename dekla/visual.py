@@ -33,72 +33,19 @@ class GUIConfig:
     WINDOW_MIN_HEIGHT = 600
     FULLSCREEN_DEFAULT = False
 
-"""
-class DStack(QStackedLayout):
-
-    def __init__(self, window):
-        super().__init__()
-        window.setLayout(self)
-"""
-"""
-class DWindow(QWidget):
-
-    def __init__(self):
-        super().__init__()
-        self.setMinimumSize(GUIConfig.WINDOW_MIN_WIDTH, GUIConfig.WINDOW_MIN_HEIGHT)
-        self._lock = threading.Lock()
-
-    def paintEvent(self, event):
-        with self._lock:
-            super().paintEvent(event)
-
-    def saveImage(self):
-        with self._lock:
-            image = self.grab().toImage()
-            ba = QByteArray()
-            buf = QBuffer(ba)
-            buf.open(QIODevice.WriteOnly)
-            image.save(buf, "PNG")
-            return ba.data()
-"""
-
-class DWindow(QMainWindow):
-    def __init__(self):
-        super().__init__()
-
-        # changing the background color to yellow
-        self.setStyleSheet("background-color: yellow;")
-
-        # set the title
-        self.setWindowTitle("Color")
-
-        # setting  the geometry of window
-        self.setGeometry(0, 0, 400, 300)
-
-        # creating a label widget
-        self.label = QLabel("Yellow", self)
-
-        # moving position
-        self.label.move(100, 100)
-
-        # setting up border
-        self.label.setStyleSheet("border: 1px solid black;")
-
-        # show all the widgets
-        self.show()
-
 class MainWindow(QMainWindow):
 
-    def __init__(self, guimanager):
+    def __init__(self):
         QMainWindow.__init__(self)
         self.setWindowTitle("Dekla")
+        self.setMinimumSize(GUIConfig.WINDOW_MIN_WIDTH, GUIConfig.WINDOW_MIN_HEIGHT)
         self.menu = self.menuBar()
         self.file_menu = self.menu.addMenu("File")
         self.view_menu = self.menu.addMenu("View")
 
         exit_action = QAction("Exit", self)
         exit_action.setShortcut(QKeySequence.Quit)
-        exit_action.triggered.connect(self.close)
+        exit_action.triggered.connect(self.quit)
 
         fullscreen_action = QAction("Fullscreen mode", self)
         fullscreen_action.setShortcut(QKeySequence(Qt.CTRL + Qt.Key_F))
@@ -114,16 +61,20 @@ class MainWindow(QMainWindow):
         self.status = self.statusBar()
         self.status.showMessage("status bar ...")
 
+    def quit(self):
+        QtGUIManager.QApp.closeAllWindows()
+
 class QtGUIManager(DeklaModule, QObject):
+    QApp = QApplication([])
 
     def __init__(self, deklamaster_address=('localhost', 9966)):
         DeklaModule.__init__(self, deklamaster_address)
-        self._QApp = QApplication([])
         self._widgets = dict()
-        self._widgets['main'] = MainWindow(self)
+        self._widgets['main'] = MainWindow()
         self._fullscreen_mode = GUIConfig.FULLSCREEN_DEFAULT
         self.show()
-        self._QApp.exec()
+        QtGUIManager.QApp.exec()
+        self.unregister()
 
     def show(self):
         for widget in self._widgets.values():

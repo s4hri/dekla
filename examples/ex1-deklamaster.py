@@ -24,11 +24,5 @@ SOFTWARE.
 
 
 from dekla.core import DeklaMaster
-from dekla.visual import QtGUIManager
-from dekla.audio import SoundManager
-from dekla.input import KeyboardManager
 
-DM = DeklaMaster()
-GM = QtGUIManager()
-KM = KeyboardManager()
-SM = SoundManager()
+DeklaMaster()

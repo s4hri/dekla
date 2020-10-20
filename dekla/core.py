@@ -62,12 +62,15 @@ class DeklaMaster:
         except RuntimeError:
             logging.error("DeklaMaster encountered an error during its execution.")
 
-
     def getAvailablePort(self, hostname):
         self._module_registration.acquire(blocking=True, timeout=DeklaMaster.MODULE_REGISTRATION_TIMEOUT)
         host_registered_modules = list(filter( lambda x: x[0] == hostname, list(self._registered_modules.keys())))
+        released_ports = list(filter( lambda k: self._registered_modules[k] == None, list(self._registered_modules.keys()) ))
         if len(host_registered_modules) > 0:
-            port = host_registered_modules[-1][1] + 1
+            if len(released_ports) > 0:
+                port = released_ports[0][1]
+            else:
+                port = host_registered_modules[-1][1] + 1
         else:
             port = self._address[1]+1
         return port
@@ -78,11 +81,16 @@ class DeklaMaster:
         logging.debug("A Dekla Module named %s has been registered with address %s", name, address)
         self._module_registration.release()
 
+    def unregister(self, name):
+        addr = self.getModuleAddress(name)
+        self._registered_modules[addr] = None
+        logging.debug("A Dekla Module named %s has been unregistered. The address %s is free to use", name, addr)
+
     def getRegisteredModules(self):
         return self._registered_modules
 
     def getModuleAddress(self, name):
-        return list(a.keys())[list(a.values()).index(name)]
+        return list(self._registered_modules.keys())[list(self._registered_modules.values()).index(name)]
 
 class DeklaModule:
 
@@ -92,3 +100,7 @@ class DeklaModule:
         self._address = (socket.gethostname(), port)
         self._deklamaster.register(self.__class__.__name__, self._address[0],  self._address[1])
         threading.Thread(target=runRPCServer, args=(self._address, self)).start()
+        logging.debug("Dekla module %s has started!", self.__class__.__name__)
+
+    def unregister(self):
+        self._deklamaster.unregister(self.__class__.__name__)
